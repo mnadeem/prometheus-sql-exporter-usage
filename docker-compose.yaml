@@ -89,9 +89,9 @@ services:
   grafana:
     image: grafana/grafana:7.4.0-ubuntu
     volumes:
-      - ./data/grafana-data/datasources:/etc/grafana/provisioning/datasources
-      - ./data/grafana-data/dashboards-provisioning:/etc/grafana/provisioning/dashboards
-      - ./data/grafana-data/dashboards:/var/lib/grafana/dashboards
+      - ./data/grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./data/grafana/dashboards-provisioning:/etc/grafana/provisioning/dashboards
+      - ./data/grafana/dashboards:/var/lib/grafana/dashboards
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
