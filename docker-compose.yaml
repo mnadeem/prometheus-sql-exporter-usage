@@ -1,0 +1,103 @@
+version: "3.8"
+
+services:
+  ms-db-server:
+    image: mcr.microsoft.com/mssql/server
+    environment: 
+      - SA_PASSWORD=P@ssw0rd
+      - ACCEPT_EULA=Y
+    volumes:
+      - ./data/db/mssql/scripts:/scripts/
+    ports:
+      - "1433:1433"
+    #entrypoint: /bin/bash
+    command:
+      - /bin/bash
+      - -c
+      - |
+        /opt/mssql/bin/sqlservr &
+        pid=$$!
+
+        echo "Waiting for MS SQL to be available ⏳"
+        /opt/mssql-tools/bin/sqlcmd -l 30 -S localhost -h-1 -V1 -U sa -P $$SA_PASSWORD -Q "SET NOCOUNT ON SELECT \"YAY WE ARE UP\" , @@servername"
+        is_up=$$?
+        while [ $$is_up -ne 0 ] ; do
+          echo -e $$(date)
+          /opt/mssql-tools/bin/sqlcmd -l 30 -S localhost -h-1 -V1 -U sa -P $$SA_PASSWORD -Q "SET NOCOUNT ON SELECT \"YAY WE ARE UP\" , @@servername"
+          is_up=$$?
+          sleep 5
+        done
+
+        for foo in /scripts/*.sql
+          do /opt/mssql-tools/bin/sqlcmd -U sa -P $$SA_PASSWORD -l 30 -e -i $$foo
+        done
+        echo "All scripts have been executed. Waiting for MS SQL(pid $$pid) to terminate."
+
+        wait $$pid
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=provider1
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgrespassword
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data/db/postgresql/data:/var/lib/postgresql
+      - ./data/db/postgresql/scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  mysql:
+    image: mysql
+    restart: always
+    volumes:
+      - ./data/db/mysql/data:/var/lib/mysql
+      - ./data/db/mysql/scripts:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: userdb
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testuser
+    ports:
+      - "3600:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  volume_exporter:
+    image: mnadeem/volume_exporter
+    command: ["--volume-dir=tempo:/tmp/tempo", "--volume-dir=logs:/app/logs"]
+    volumes:
+      - ./data/logs:/app/logs
+      - ./data/tempo-data:/tmp/tempo
+    ports:
+      - 9889:9888
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./etc/prometheus.yaml:/etc/prometheus.yaml
+    entrypoint:
+      - /bin/prometheus
+      - --config.file=/etc/prometheus.yaml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:7.4.0-ubuntu
+    volumes:
+      - ./data/grafana-data/datasources:/etc/grafana/provisioning/datasources
+      - ./data/grafana-data/dashboards-provisioning:/etc/grafana/provisioning/dashboards
+      - ./data/grafana-data/dashboards:/var/lib/grafana/dashboards
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+      - volume_exporter
