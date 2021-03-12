@@ -1,4 +1,4 @@
-\c provider1
+\c postgresdb
 
 
 CREATE TABLE flight (

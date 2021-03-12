@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  ms-db-server:
+  mssql:
     image: mcr.microsoft.com/mssql/server
     environment: 
       - SA_PASSWORD=P@ssw0rd
@@ -39,7 +39,7 @@ services:
     image: postgres
     restart: always
     environment:
-      - POSTGRES_DB=provider1
+      - POSTGRES_DB=postgresdb
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgrespassword
       - PGDATA=/var/lib/postgresql/data/pgdata
@@ -57,7 +57,7 @@ services:
       - ./data/db/mysql/scripts:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: userdb
+      MYSQL_DATABASE: mysqldb
       MYSQL_USER: testuser
       MYSQL_PASSWORD: testuser
     ports:

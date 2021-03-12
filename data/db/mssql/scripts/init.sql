@@ -1,6 +1,6 @@
-CREATE DATABASE OtelTempo;
+CREATE DATABASE mssqldb;
 GO
-USE OtelTempo;
+USE mssqldb;
 GO
 CREATE TABLE flight (
   id    int IDENTITY(1,1) PRIMARY KEY,
