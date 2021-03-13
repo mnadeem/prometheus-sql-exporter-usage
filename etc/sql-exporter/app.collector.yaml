@@ -16,6 +16,6 @@ metrics:
       select
         count(*) as AppMetrics
       from
-        dbo.metrics
+        flight
       where
-        porocessing not in ('done', 'na')
+        origin in ('SEA')
