@@ -72,7 +72,7 @@ services:
       MYSQL_USER: testuser
       MYSQL_PASSWORD: testuser
     ports:
-      - "3600:3306"
+      - "3306:3306"
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 20s
