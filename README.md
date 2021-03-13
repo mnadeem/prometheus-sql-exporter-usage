@@ -1,5 +1,7 @@
 # Prometheus SQL Exporter
 
+![](docs/img/sql-exporter-design.png)
+
 ### Deployment Strategy
 
 ![](docs/img/sql-exporter.png)
