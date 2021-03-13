@@ -1,5 +1,7 @@
 # Prometheus SQL Exporter
 
+![](docs/img/sql-exporter.png)
+
 Execute `docker-compose up`
 
 ````bash
