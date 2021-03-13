@@ -14,7 +14,7 @@ metrics:
     values: [AppMetrics]
     query: |
       select
-        count(*) as AppMetrics
+        count(*) as "AppMetrics"
       from
         flight
       where

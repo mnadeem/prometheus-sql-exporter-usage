@@ -33,6 +33,8 @@ jobs:
     static_configs:
       - targets:
           'sqlserver': 'sqlserver://sa:P@ssw0rd@mssql:1433?database=mssqldb'
+          'postgres': 'postgres://postgres:postgrespassword@postgres:5432/postgresdb?sslmode=disable'
+          'mysql': 'mysql://testuser:testuser@tcp(mysql:3306)/mysqldb'
         labels:
           type: sql_exporter
  
