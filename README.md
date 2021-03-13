@@ -1,8 +1,9 @@
 # Prometheus SQL Exporter
 
 
-# Connecting DB
+# Connecting To DBs
 
+All Connections
 
 ![](docs/img/all-connections.png)
 

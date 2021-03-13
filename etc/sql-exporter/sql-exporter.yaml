@@ -1,0 +1,41 @@
+# Global settings and defaults.
+global:
+  # Subtracted from Prometheus' scrape_timeout to give us some headroom and prevent Prometheus from
+  # timing out first.
+  scrape_timeout_offset: 500ms
+  # Minimum interval between collector runs: by default (0s) collectors are executed on every scrape.
+  min_interval: 0s
+  # Maximum number of open connections to any one target. Metric queries will run concurrently on
+  # multiple connections.
+  max_connections: 1
+  # Maximum number of idle connections to any one target.
+  max_idle_connections: 1
+ 
+# The target to monitor and the list of collectors to execute on it.
+#target:
+  # Data source name always has a URI schema that matches the driver name. In some cases (e.g. MySQL)
+  # the schema gets dropped or replaced to match the driver expected DSN format.
+  #data_source_name: 'sqlserver://prom_user:prom_password@dbserver1.example.com:1433'
+ 
+  # Collectors (referenced by name) to execute on the target.
+  #collectors: [pricing_data_freshness]
+ 
+# Jobs are equivalent to jobs in the Prometheus configuration: they group similar targets with similar metrics together. 
+jobs:
+  # All metrics from all targets get a `job` label, set to this value.
+  - job_name: app_one_mssql
+ 
+    # The set of collectors (defined below) to be applied to all targets in this job.
+    collectors: [app_one]
+ 
+    # Similar to the Prometheus configuration, multiple sets of targets may be defined, each with an optional set of
+    # labels to be applied to all metrics.
+    static_configs:
+      - targets:
+          'sqlserver': 'sqlserver://sa:P@ssw0rd@mssql:1433?database=mssqldb'
+        labels:
+          type: sql_exporter
+ 
+# Collector definition files.
+collector_files:
+  - "*.collector.yaml"

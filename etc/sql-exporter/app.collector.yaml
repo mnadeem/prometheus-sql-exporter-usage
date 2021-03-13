@@ -1,0 +1,21 @@
+
+# This collector will be referenced in the exporter configuration as `app_one`.
+collector_name: app_one
+
+# A Prometheus metric with (optional) additional labels, value and labels populated from one query.
+metrics:
+  - metric_name: app_metric_name
+    type: gauge
+    help: 'App Sample metrics'
+    static_labels:
+      # Arbitrary key/value pair
+      unit: app_one
+      env: dev
+    values: [AppMetrics]
+    query: |
+      select
+        count(*) as AppMetrics
+      from
+        dbo.metrics
+      where
+        porocessing not in ('done', 'na')

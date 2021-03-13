@@ -87,6 +87,21 @@ services:
     ports:
       - 9889:9888
 
+  sql_exporter:
+    image: githubfree/sql_exporter:latest
+    command: ["--config.file=/etc/sql-exporter/sql-exporter.yaml"]
+    volumes:
+      - ./etc/sql-exporter:/etc/sql-exporter
+    ports:
+      - 9399:9399
+    depends_on:
+      mssql:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
   prometheus:
     image: prom/prometheus:latest
     volumes:
@@ -110,9 +125,4 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      mssql:
-        condition: service_healthy
-      mysql:
-        condition: service_healthy
-      postgres:
-        condition: service_healthy
+      - sql_exporter
