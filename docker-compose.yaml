@@ -99,5 +99,9 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - prometheus
-      - volume_exporter
+      mssql:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
