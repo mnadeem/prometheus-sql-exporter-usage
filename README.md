@@ -1,5 +1,7 @@
 # Prometheus SQL Exporter
 
+### Deployment Strategy
+
 ![](docs/img/sql-exporter.png)
 
 Execute `docker-compose up`
@@ -15,15 +17,15 @@ Starting prometheus-sql-exporter-usage_sql_exporter_1    ... done
 Starting prometheus-sql-exporter-usage_grafana_1         ... done
 ````
 
-Metrics endpoint
+### Metrics endpoint
 
 ![](docs/img/metrics.png)
 
-Prometheus
+### Prometheus
 
 ![](docs/img/metrics_prom.png)
 
-Grafana
+### Grafana
 
 ![](docs/img/metrics_grafana.png)
 
