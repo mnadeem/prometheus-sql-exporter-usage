@@ -69,10 +69,10 @@ services:
 
   volume_exporter:
     image: mnadeem/volume_exporter
-    command: ["--volume-dir=tempo:/tmp/tempo", "--volume-dir=logs:/app/logs"]
+    command: ["--volume-dir=mysql:/data/mysql", "--volume-dir=pgdata:/data/postgresql"]
     volumes:
-      - ./data/logs:/app/logs
-      - ./data/tempo-data:/tmp/tempo
+      - ./data/db/mysql/data:/data/mysql
+      - ./data/db/postgresql/data:/data/postgresql
     ports:
       - 9889:9888
 
